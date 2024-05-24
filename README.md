@@ -10,13 +10,7 @@ The script currently only supports .csv files.
 NOTE: This process has been developed on Windows. It has NOT been tested for any other operating system type, e.g. macOS.
 
 # Downloading and preparing the environment
-(There are two options available for downloading the code, depending on whether you wish to use Git. Option 1 requires Git to be installed in your environment (https://git-scm.com/).
-
-EITHER use the command line to navigate to your desired folder location and execute the following command: git clone https://github.com/MRC-Epid/qc_diagnostics/
-
-OR select the 'Repository' option from the lefthand sidebar, and select the download icon on the top-right of the Repository page. You can select from different formats of download.
-
-Regardless of whether you used step 1 or 2 above, you should now have a folder that contains the required files. Also included is a folder named "_logs", this is where log files will be created by the process.
+Navigate to the QC_Garmin 'Repository' click '<> Code' and then 'Download ZIP'. Move the zip folder from 'downloads' into a preferred folder and then unzip. This will folder will contain the 'QC_Garmin_v1.py' 
 
 Included in the downloaded files is an example job file with the required column headings "pid" and "filename". The pid column must contain unique values and the filename column must contain the complete filepath of each file requiring processing.)
 
