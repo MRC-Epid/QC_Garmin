@@ -10,13 +10,11 @@ The script currently only supports .csv files.
 NOTE: This process has been developed on Windows. It has NOT been tested for any other operating system type, e.g. macOS.
 
 # Downloading and preparing the environment
-Navigate to the QC_Garmin 'Repository' click '<> Code' and then 'Download ZIP'. Move the zip folder from 'downloads' into a preferred folder and then unzip. This will folder will contain the 'QC_Garmin_v1.py' 
-
-Included in the downloaded files is an example job file with the required column headings "pid" and "filename". The pid column must contain unique values and the filename column must contain the complete filepath of each file requiring processing.)
+Navigate to the QC_Garmin 'Repository' click '<> Code' and then 'Download ZIP'. Move the zip folder from 'downloads' into a preferred folder and then unzip. Included in the downloaded files is the 'QC_Garmin_v1.py' as well s the 'Data_quality_checks', 'garmin_QC.bat', 'README.md' and 'requirements.txt'.  
 
 Before running the script for the first time the 'requirements.txt' needs to be run to install the neccesary Python Packages. Follow these step to run this: 
     1. Open the command prompt (search "cmd" in the start menu)
-    2. Navigate to the directory where the requirements.txt file is saved: cd folder_location (e.g., C:\Users\xxx\PycharmProjects\Garmin)
+    2. Navigate to the directory where the requirements.txt file is saved: cd folder_location (e.g.,                     C:\Users\xxx\PycharmProjects\Garmin)
     3. Use the following command to install the necessary packages: pip install -r requirements.txt
     4. The command prompt should now run through all the necessary packages. Close the Command Prompt once it is done.
     5. If this didn't work because you don't have pip install run the following command instead (aften navigating to the correct directory): python -m pip install -r requirements.txt
