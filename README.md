@@ -13,17 +13,25 @@ NOTE: This process has been developed on Windows. It has NOT been tested for any
 Navigate to the QC_Garmin 'Repository' click '<> Code' and then 'Download ZIP'. Move the zip folder from 'downloads' into a preferred folder and then unzip. Included in the downloaded files is the 'QC_Garmin_v1.py' as well s the 'Data_quality_checks', 'garmin_QC.bat', 'README.md' and 'requirements.txt'.  
 
 Before running the script for the first time the 'requirements.txt' needs to be run to install the neccesary Python Packages. Follow these step to run this: 
+
     1. Open the command prompt (search "cmd" in the start menu)
-    2. Navigate to the directory where the requirements.txt file is saved: cd folder_location (e.g.,                     C:\Users\xxx\PycharmProjects\Garmin)
+    
+    2. Navigate to the directory where the requirements.txt file is saved: cd folder_location (e.g., C:\Users\xxx\PycharmProjects\Garmin)
+    
     3. Use the following command to install the necessary packages: pip install -r requirements.txt
+    
     4. The command prompt should now run through all the necessary packages. Close the Command Prompt once it is done.
+    
     5. If this didn't work because you don't have pip install run the following command instead (aften navigating to the correct directory): python -m pip install -r requirements.txt
 
 # Editing the script
 As this is a self-contained process, all the settings are found at the top of the processing script QC_Garmin_v1.3.py.
 The settings are commented to explain their usage. The data_dir and output_QC folder location must be provided.
 
-A .bat script is created to be able to run the script by double clicking this. The .bat script needs to be edited to be able to run. Change the first "" to the correct directory for python.exe (this can be found by running the command 'python -c "import sys; print(sys.executable)"' in the python interpreter you use) and change the second "" to the correct directory where the python script is saved.
+A .bat script is created to be able to run the script by double clicking this. The .bat script needs to be edited to be able to run. Follow these steps to edit the .bat script: 
+
+    1. Change the first "" to the correct directory for python.exe. This can be found by running the following command in the python interpreter: python -c "import sys; print(sys.executable)"
+    2. Change the second "" to the correct directory where the python script is saved.
 
 # Executing the script
 The script can be executed directly in your python interpreter or by double clicking the 'garmin_QC.bat' file. 
