@@ -1,2 +1,2 @@
-"... folder location ...\python.exe" "... folder localtion ... \QC_Garmin_v1.3.py"
+"... folder location ...\python.exe" "... folder location ... \QC_Garmin_v1.3.py"
 pause
