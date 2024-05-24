@@ -20,6 +20,13 @@ Regardless of whether you used step 1 or 2 above, you should now have a folder t
 
 Included in the downloaded files is an example job file with the required column headings "pid" and "filename". The pid column must contain unique values and the filename column must contain the complete filepath of each file requiring processing.)
 
+Before running the script for the first time the 'requirements.txt' needs to be run to install the neccesary Python Packages. Follow these step to run this: 
+    1. Open the command prompt (search "cmd" in the start menu)
+    2. Navigate to the directory where the requirements.txt file is saved: cd folder_location (e.g., C:\Users\xxx\PycharmProjects\Garmin)
+    3. Use the following command to install the necessary packages: pip install -r requirements.txt
+    4. The command prompt should now run through all the necessary packages. Close the Command Prompt once it is done.
+    5. If this didn't work because you don't have pip install run the following command instead (aften navigating to the correct directory): python -m pip install -r requirements.txt
+
 # Editing the script
 As this is a self-contained process, all the settings are found at the top of the processing script QC_Garmin_v1.3.py.
 The settings are commented to explain their usage. The data_dir and output_QC folder location must be provided.
