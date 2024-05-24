@@ -31,6 +31,7 @@ The settings are commented to explain their usage. The data_dir and output_QC fo
 A .bat script is created to be able to run the script by double clicking this. The .bat script needs to be edited to be able to run. Follow these steps to edit the .bat script: 
 
     1. Change the first "" to the correct directory for python.exe. This can be found by running the following command in the python interpreter: python -c "import sys; print(sys.executable)"
+    
     2. Change the second "" to the correct directory where the python script is saved.
 
 # Executing the script
