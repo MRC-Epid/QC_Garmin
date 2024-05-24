@@ -1,16 +1,16 @@
 ########################################################################################################################
-# This python script QCs data exported from the Fitrockr platform. This script should be run once the renaming script has been run
+# This python script QCs Garmin data exported from the Fitrockr platform. This script should be run once the renaming and unzipping Garmin script has been run
 #
 #
 # Author: cas254
-# Version: 1.0
+# Version: 1.3
 # Date: 22-Mar-2024
 ########################################################################################################################
-# Checking what python interpreter is used to add this to the .bat script.
+# These lines can be run to check what python interpreter is used to add this to the .bat script.
 #import sys
 #print(sys.executable)
-
-# Import packages
+########################################################################################################################
+# Import packages used for this script (Requirement.txt needs to be run prior to running this script, to install the needed packages)
 import os
 import pandas as pd
 import datetime
@@ -18,15 +18,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
 import sys
-
-# Folders:
-garmin_folder = 'C:/Users/Cecilie Agegaard/Documents/Cecilie/Garmin'                # Main folder for the project
-data_dir = 'C:/Users/Cecilie Agegaard/Documents/Cecilie/Garmin/rename_unzip/Folder_structure/To_Upload'           # Where renamed files that are ready to upload are stored.
-output_QC = 'C:/Users/Cecilie Agegaard/Documents/Cecilie/Garmin/QC/QC_output'           # Where QC log and graphs will be saved
+########################################################################################################################
+# FOLDER SETTINGS FOR PROJECT
+data_dir = ''               # Location of renamed folders, with the renamed garmin data in.
+output_QC = ''              # Location where QC log and graphs will be saved
 # Files to QC:
 heartrate = '*heartrate*'
 accelerometer = '*accelerometer.csv'
-
+########################################################################################################################
+SCRIPT BEGINS BELOW
+########################################################################################################################
 
 # CREATING FILELIST OF HEARTRATE FILES AND EXTRACTING PARTICIPANT ID FROM HEARTRATE FILE #
 def heartrate_filelist(data_dir):
@@ -65,8 +66,6 @@ def heartrate_filelist(data_dir):
 
     return heartrate_files, participant_ids
 
-
-
 # CREATING QC DATAFRAME WHICH WE WILL SAVE ALL QC VARIABLES TO AND EXPORT IN THE END #
 def QC_dataframe():
     folder_names = os.listdir(data_dir)
@@ -81,7 +80,7 @@ def heartrate_timestamps(heartrate_files):
 
     for heartrate_df in heartrate_files:
 
-        # Creating first timestamp variable and append it to the  list
+        # Creating first timestamp variable and append it to the first timestamp list
         first_row = heartrate_df.iloc[0]
         hr_first_timestamp = datetime.datetime.strptime(first_row['Start Time (UTC)'], '%Y-%m-%dT%H:%M:%S')
         hr_first_timestamps.append(hr_first_timestamp)
@@ -105,7 +104,7 @@ def heartrate_wear_time(heartrate_files):
     # Opening each heartrate file:
     for heartrate_df in heartrate_files:
 
-        # Creating copy of dataframe where the values 0 and 255 are masked out as missing
+        # Creating copy of dataframe where the values 0, -1, 1 and 255 are masked out as missing
         masked_heartrate_df = heartrate_df.copy()
         # Replacing heart rate values 0, 1, -1 and 255 with missing
         values_to_replace = [0, -1, 1, 255]
@@ -231,8 +230,6 @@ def accelerometer_filelist():
     # List to store paths of accelerometer files:
     accelerometer_files = []
 
-
-
     # Loop through folders and create folder_path for each of the folders in To_Upload
     for folder_name in os.listdir(data_dir):
         folder_path = os.path.join(data_dir, folder_name)
@@ -265,7 +262,7 @@ def accelerometer_timestamps(accelerometer_files):
 
     for accelerometer_df in accelerometer_files:
 
-        # Creating first timestamp variable and append it to the  list
+        # Creating first timestamp variable and append it to the first timestamp list
         first_row = accelerometer_df.iloc[0]
         acc_first_timestamp = datetime.datetime.strptime(first_row['Start Time (UTC)'], '%Y-%m-%dT%H:%M:%S.%f')
         acc_first_timestamps.append(acc_first_timestamp)
@@ -273,6 +270,7 @@ def accelerometer_timestamps(accelerometer_files):
         # Creating last timestamp variable and append it to last timestamp list
         last_row = accelerometer_df.iloc[-1]
         last_timestamp_str = last_row['Start Time (UTC)']
+        
         # Rounding last timestamp to last full round second:
         acc_last_timestamp_rounded = last_timestamp_str[:-4] + ".000"
         acc_last_timestamp = datetime.datetime.strptime(acc_last_timestamp_rounded, '%Y-%m-%dT%H:%M:%S.%f')
@@ -280,7 +278,7 @@ def accelerometer_timestamps(accelerometer_files):
 
     return acc_first_timestamps, acc_last_timestamps
 
-# CHECKING FOR TIME JUMPS IN ACCELEROMETER FILES#
+# CHECKING FOR TIME JUMPS IN ACCELEROMETER FILES
 def acc_time_jumps(accelerometer_files, wear_start_times, wear_end_times):
     list_out_of_range_minutes = []
 
@@ -292,7 +290,7 @@ def acc_time_jumps(accelerometer_files, wear_start_times, wear_end_times):
         # Counter for out-of-range seconds
         out_of_range_seconds = 0
 
-        # Iterate over each second and count the number of data points. Then counting any seconds that are out of the range of 20-3-hz
+        # Iterate over each second and count the number of data points. Then counting any seconds that are out of the range of 20-30 hz
         for _, group in accelerometer_df.groupby(accelerometer_df['Start Time (UTC)'].dt.floor('s')):
             data_points_within_second = len(group)
             if data_points_within_second < 20 or data_points_within_second > 30:
@@ -305,7 +303,7 @@ def acc_time_jumps(accelerometer_files, wear_start_times, wear_end_times):
         list_out_of_range_minutes.append(out_of_range_minutes)
     return list_out_of_range_minutes
 
-# CALCULATING ENMO AND COLLAPSING ACCELEROMETER DATA TO MINUTE LEVEL #
+# CALCULATING ENMO AND COLLAPSING ACCELEROMETER DATA TO MINUTE LEVEL 
 def accelerometer_enmo(accelerometer_files, wear_start_times, wear_end_times):
     collapsed_accelerometer_files = []
 
@@ -327,7 +325,7 @@ def accelerometer_enmo(accelerometer_files, wear_start_times, wear_end_times):
         collapsed_accelerometer_files.append(collapsed_accelerometer_df)
     return collapsed_accelerometer_files
 
-# CREATING FILELIST OF SLEEP FILES #
+# CREATING FILELIST OF SLEEP FILES 
 def sleep_filelist():
     # List to store paths of sleep files:
     sleep_files = []
@@ -353,13 +351,12 @@ def sleep_filelist():
 
     return sleep_files
 
-# CALCULATING HOW MANY NIGHTS OF SLEEP IS RECORDED #
+# CALCULATING HOW MANY NIGHTS OF SLEEP IS RECORDED 
 def sleep_times(sleep_files):
     nights_all = []
 
     # Opening each sleep file:
     for sleep_df in sleep_files:
-
 
         if not sleep_df.empty:
             #Converting to datetime
