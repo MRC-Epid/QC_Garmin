@@ -20,8 +20,8 @@ from matplotlib.dates import DateFormatter
 import sys
 ########################################################################################################################
 # FOLDER SETTINGS FOR PROJECT
-data_dir = 'J:/Functional_Groups/PA/Devices/Garmin/Testing/_data/Garmin/test_QC/_data'               # Location of renamed folders, with the renamed garmin data in.
-output_QC = 'J:/Functional_Groups/PA/Devices/Garmin/Testing/_data/Garmin/test_QC/_output'              # Location where QC log and graphs will be saved
+data_dir = ''               # Location of renamed folders, with the renamed garmin data in.
+output_QC = ''              # Location where QC log and graphs will be saved
 # Files to QC:
 heartrate = '*heartrate*'
 accelerometer = '*accelerometer.csv'
