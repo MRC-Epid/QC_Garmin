@@ -9,6 +9,9 @@ The script currently only supports .csv files.
 
 NOTE: This process has been developed on Windows. It has NOT been tested for any other operating system type, e.g. macOS.
 
+# Version
+Version 1.4: It has been added, to append all qc_logs together as well as outputting a log for each run of the code. 
+
 # Downloading and preparing the environment
 Navigate to the QC_Garmin 'Repository' click '<> Code' and then 'Download ZIP'. Move the zip folder from 'downloads' into a preferred folder and then unzip. Included in the downloaded files is the 'QC_Garmin_v1.py' as well s the 'Data_quality_checks', 'garmin_QC.bat', 'README.md' and 'requirements.txt'.  
 
