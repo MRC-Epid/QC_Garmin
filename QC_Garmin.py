@@ -1,10 +1,12 @@
 ########################################################################################################################
 # This python script QCs Garmin data exported from the Fitrockr platform. This script should be run once the renaming and unzipping Garmin script has been run
-#
+# This script will produce a graph displaying heart rate traces and ENMO for each participant, as well as a csv file with qc variables to review.
+# A seperate csv will be created for all files that are run with todays date and the qc variable are also appended in a qc_log_all (with all participants that have been run through qc)
+# It is possible to create an interactive plot, which allows you to zoom to look at the data in more detail. (edit the variable create_interactive_plot to 'yes' if you wish to run this)
 #
 # Author: cas254
-# Version: 1.3
-# Date: 22-Mar-2024
+# Version: 2.0
+# Date: 18-Jul-2025
 ########################################################################################################################
 # These lines can be run to check what python interpreter is used to add this to the .bat script.
 #import sys
@@ -18,13 +20,18 @@ import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
 import sys
 from colorama import Fore, init
+import plotly.graph_objects as go
 ########################################################################################################################
 # FOLDER SETTINGS FOR PROJECT
-data_dir = 'V:/Functional_Groups/PhysicalActivity/PA_Tech_Team/Cecilie_AS/TEMP/fitrockr_exports'               # Location of renamed folders, with the renamed garmin data in.
-output_QC = 'V:/Functional_Groups/PhysicalActivity/PA_Tech_Team/Cecilie_AS/TEMP/QC_output'              # Location where QC log and graphs will be saved
+data_dir = ''               # EDIT: Location of renamed folders, with the renamed garmin data in.
+output_QC = ''              # EDIT: Location where QC log and graphs will be saved
 # Files to QC:
 heartrate = '*heartrate*'
 accelerometer = '*accelerometer.csv'
+# To automatically reset color of printed text
+init(autoreset=True)
+# Option to produce interactive plots where data can be looked at in more detail:
+create_interactive_plot = 'No' # Set to 'yes' if you want to create interactive plots (where you can zoom) or 'no' if you don't want to. The plots are only being displayed not saved.
 ########################################################################################################################
 #SCRIPT BEGINS BELOW
 ########################################################################################################################
@@ -92,6 +99,7 @@ def timestamps(data_dir, id, data_type, variables, timeformat):
     # Getting last timestamp of file
     last_row = df.iloc[-1]
     last_timestamp = datetime.datetime.strptime(last_row['Start Time (Local)'], timeformat)
+
     return first_timestamp, last_timestamp, df
 
 # --- Cleaning HR data and finding wear start and end time --- #
@@ -267,7 +275,14 @@ def graphs(hr_df, acc_df, nights_df, id):
     fig, ax1 = plt.subplots(figsize=(20, 10))
 
     # Creating second y axis on the right side plotting heart rate
-    ax1.plot(hr_df['Start Time (Local)'], hr_df['Heart Rate (bpm)'], label='Heart Rate (bpm)', linestyle='-', markeredgecolor='r', color ='r')
+    ax1.plot(
+        hr_df['Start Time (Local)'],
+        hr_df['Heart Rate (bpm)'],
+        label='Heart Rate (bpm)',
+        linestyle='-',
+        markeredgecolor='r',
+        color ='r',
+        linewidth=0.7)
     ax1.set_ylabel('Heart Rate (bpm)', color='r')
     ticks = np.arange(0, 220, 20)
     ax1.set_yticks(ticks)
@@ -276,7 +291,15 @@ def graphs(hr_df, acc_df, nights_df, id):
 
     # Creating y axis on the left side plotting acceleration
     ax2 = ax1.twinx()
-    ax2.plot(acc_df['Start Time (Local)'], acc_df['ENMO'], label='Accelerometer', linestyle='-', markeredgecolor='b', color ='b')
+    ax2.plot(
+        acc_df['Start Time (Local)'],
+        acc_df['ENMO'],
+        label='Accelerometer',
+        linestyle='-',
+        markeredgecolor='b',
+        color ='b',
+        linewidth=0.7
+    )
     ax2.set_ylabel('Acceleration', color='b')
     acc_ticks = np.arange(0, 2100, 100)
     ax2.set_yticks(acc_ticks)
@@ -306,6 +329,46 @@ def graphs(hr_df, acc_df, nights_df, id):
     plt.savefig(combined_graph_path)
     plt.close()
 
+    return
+
+
+# --- Option to plot data in interactive plot to be able to see the data in more detail --- #
+def interactive_plot(hr_df, acc_df, id):
+
+    fig = go.Figure()
+
+    # Add heart rate trace
+    fig.add_trace(go.Scatter(
+        x=hr_df['Start Time (Local)'],
+        y=hr_df['Heart Rate (bpm)'],
+        mode='lines',
+        name='Heart Rate (bpm)',
+        line=dict(color='red', width=1)
+    ))
+
+    # Adding ENMO trace
+    fig.add_trace(go.Scatter(
+        x=acc_df['Start Time (Local)'],
+        y=acc_df['ENMO'],
+        mode='lines',
+        name='ENMO',
+        line=dict(color='blue', width=1),
+        yaxis='y2'
+    ))
+
+    # Layout with two axis
+    fig.update_layout(
+        title=f'Heart Rate and ENMO over time for {id}',
+        xaxis=dict(title='Time'),
+        yaxis=dict(title='Heart Rate (bpm)', color='red'),
+        yaxis2=dict(title='ENMO', overlaying='y', side='right', color='blue'),
+        legend=dict(x=0, y=1),
+        hovermode='x unified',
+        height=600,
+        width=1200
+    )
+
+    fig.show()
     return
 
 
@@ -354,6 +417,9 @@ if __name__ == '__main__':
 
         # Getting timestamps for accelerometer files
         acc_first_timestamp, acc_last_timestamp, acc_df = timestamps(data_dir, id, data_type='accelerometer', variables=['Start Time (Local)', 'X', 'Y', 'Z'], timeformat='%Y-%m-%dT%H:%M:%S.%f')
+        # Removing miliseconds from timestamps
+        acc_first_timestamp = acc_first_timestamp.replace(microsecond=0)
+        acc_last_timestamp = acc_last_timestamp.replace(microsecond=0)
 
         # Checking for minutes out of range (20-30 hz) in accelerometer file
         out_of_range_minutes, acc_df = acc_time_jumps(acc_df, wear_start_time, wear_end_time)
@@ -367,6 +433,9 @@ if __name__ == '__main__':
         # Plotting data
         graphs(collapsed_hr_df, collapsed_acc_df, nights_df, id)
 
+        # Option to get interactive plot to see data in more detail
+        if create_interactive_plot.lower() == 'yes':
+            interactive_plot(collapsed_hr_df, collapsed_acc_df, id)
 
         # Adding variables to qc_log
         qc_row = {
@@ -389,9 +458,15 @@ if __name__ == '__main__':
         qc_df = pd.concat([qc_df, pd.DataFrame([qc_row])], ignore_index=True)
 
     # Exporting the QC dataframe
-    date = str(datetime.date.today())  # Obtains current date and time and format it as a string
-    time = str(datetime.datetime.now().strftime('%H%M').replace(':', ''))
-    qc_df.to_csv(os.path.join(output_QC, "QC_log" + f"_{date}_{time}.csv"), index=False)
+    date = datetime.date.today().strftime('%d%b%Y')
+    qc_file_path = os.path.join(output_QC, f"QC_log_{date}.csv")
+
+    if os.path.exists(qc_file_path):
+        existing_df = pd.read_csv(qc_file_path)
+        qc_df = pd.concat([existing_df, qc_df], ignore_index=True)
+        qc_df = qc_df.drop_duplicates(subset='ParticipantID', keep='last')
+
+    qc_df.to_csv(qc_file_path, index=False)
 
     # Appending QC dataframes together
     append_log(qc_df)
