@@ -1,5 +1,7 @@
 # Introduction
-A standalone script for running a quality check on Garmin files. This script run through folders of Garmin data exported in .csv form from the Fitrockr platform. It extracts the participant ID and the start and end time stamp for the Heart Rate and Accelerometry file, to be able to check for discrepancies. It also returns an estimate of wear time, minimum and maximum Heart Rate and it checks if the Garmin device is recording as expected. It produces a graph showing accelerometry data, heart rate data and with shaded sections showing sleep data for each file. It outputs the QC checks into a spreadsheet, to provide a quick overview of the data files without the need to open each file.  
+A standalone script for running a quality check on Garmin files. This script run through folders of Garmin data exported in .csv form from the Fitrockr platform. It extracts the participant ID and the start and end time stamp for the Heart Rate and Accelerometry file, to be able to check for discrepancies. It also returns an estimate of wear time, minimum and maximum Heart Rate and it checks if the Garmin device is recording as expected. It produces a graph showing accelerometry data, heart rate data and with shaded sections showing sleep data for each file. It outputs the QC checks into a spreadsheet, to provide a quick overview of the data files without the need to open each file.
+
+It is furthermore possible to create an interactive plot, which allows you to look at the data in more detail through zooming. 
 
 # Prerequisites
 Garmin data exported from Fitrockr, the following data files are needed: Heart Rate, Accelerometry and Sleep (The script can be run without the sleep file and is therefore not a must)
