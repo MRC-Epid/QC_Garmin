@@ -1,18 +1,13 @@
 # Introduction
 A standalone script for running a quality check on Garmin files. This script run through folders of Garmin data exported in .csv form from the Fitrockr platform. It extracts the participant ID and the start and end time stamp for the Heart Rate and Accelerometry file, to be able to check for discrepancies. It also returns an estimate of wear time, minimum and maximum Heart Rate and it checks if the Garmin device is recording as expected. It produces a graph showing accelerometry data, heart rate data and with shaded sections showing sleep data for each file. It outputs the QC checks into a spreadsheet, to provide a quick overview of the data files without the need to open each file.
 
-It is furthermore possible to create an interactive plot, which allows you to look at the data in more detail through zooming. 
-
 # Prerequisites
 Garmin data exported from Fitrockr, the following data files are needed: Heart Rate, Accelerometry and Sleep (The script can be run without the sleep file and is therefore not a must)
-Python (Version?)
+This project is developed and tested with Python 3.11. It may work with other Python 3.x versions, but 3.11 is recommended for best compatibility.
 The script was written in the Pycharm. No other python interpreters have been tested.  
 The script currently only supports .csv files.
 
 NOTE: This process has been developed on Windows. It has NOT been tested for any other operating system type, e.g. macOS.
-
-# Version
-Version 1.4: It has been added, to append all qc_logs together as well as outputting a log for each run of the code. 
 
 # Downloading and preparing the environment
 Navigate to the QC_Garmin 'Repository' click '<> Code' and then 'Download ZIP'. Move the zip folder from 'downloads' into a preferred folder and then unzip. Included in the downloaded files is the 'QC_Garmin_v1.py' as well s the 'Data_quality_checks', 'garmin_QC.bat', 'README.md' and 'requirements.txt'.  
@@ -44,3 +39,6 @@ The script can be executed directly in your python interpreter or by double clic
 
 # Output
 The script produces output for each Participant/data folder, it appends the QC data for each participant into one .csv and produces one graph as .png for each participant. The variables in the .csv come from both the data contained in the data files itself and the derived output from the QC process. These files can be consolidated and reviewed accordingly. The files will be saved with the current time stamp and therefore won't overwrite any .csv or .png even if the QC has already been run on the given data files. An overview of how to interpret the QC output is specified in the file 'Data_quality_checks.docx'. 
+
+It is furthermore possible to create an interactive plot, which allows you to look at the data in more detail through zooming. 
+
